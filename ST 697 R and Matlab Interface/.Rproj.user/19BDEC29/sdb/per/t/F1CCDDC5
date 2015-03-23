@@ -1,0 +1,17 @@
+{
+    "contents" : "### This program is an interface calling between R and Matlab for \n### change detection in social network. The interface used is R.matlab in R\n### Todo: \n###   - social network simulation using ergm\n###      - change the number of vertices as random\n###   - unknown reasons for haning on the Matlab server. Code can not run since then.\n\n\n# install the interface package and ergm\ninstall.packages(\"R.matlab\")\ninstall.packages(\"ergm\")\nlibrary(R.matlab)\nlibrary(ergm)\n\n\n# start the Matlab server\nMatlab$startServer()\n\n# create a Matlab client\nmatlab = Matlab()\n\n# opent the Matlab client\nisOpen = open(matlab)\n\n## The adj matrices should be generated through simulation and passed\n# through the interface.\n# In the trial, load the adj sequence\nevaluate(matlab, \"load('enron_email_networks_directed.mat', 'adj');\")\n\n# define the type I error\nsetVariable(matlab, alpha = 0.05)\n\n# call the existing Matlab functions in the current path. No need to redefine!\nevaluate(matlab, \"adj_test = adj(1:10);\")\nevaluate(matlab, \"[mu, Sigma, loadings, theta, uclT2, uclSPE]=phaseIanalysis(adj_10,alpha);\")\n\n\n## Start the simulation using ergm. 30 in control and 20 out of control\nn.sim = 60\nn.inControl = 40\nn.iter = 0\nfor(i in 1:n.sim) {\n  n.iter = n.iter + 1\n  cat(n.iter, \"/\", n.sim, \" iteration\\n\")\n  \n  # simulate the network in-control or out-of-control\n  if(n.iter <= n.inControl)\n    g.sim = simulate(network(50) ~ edges + mutual, coef=c(0, 0))\n  else\n    g.sim = simulate(network(50) ~ edges + mutual, coef=c(1, 0))\n  \n  # create adjencency matrices sequence in Matlab\n  \n}\n",
+    "created" : 1424642918149.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "563948767",
+    "id" : "F1CCDDC5",
+    "lastKnownWriteTime" : 1424647938,
+    "path" : "~/ST 697 R and Matlab Interface/interface_call.R",
+    "project_path" : "interface_call.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

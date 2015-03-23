@@ -1,0 +1,17 @@
+{
+    "contents" : "library(ergm)\nlibrary(R.matlab)\n\ng.sim.incontrol = simulate(network(100) ~ density + mutual + transitive, \n                           coef=c(0.1, 0.1, 0.1), nsim = 50)\n# plot(g.sim.incontrol[[1]])\n\n# justify the network statistics\n# summary(g.sim.incontrol[[1]] ~ density + mutual + transitive)\n# summary(g.sim.incontrol[[2]] ~ density + mutual + transitive)\n\ng.sim.outcontrol = simulate(network(100) ~ density + mutual + transitive, \n                            coef=c(0.1, 0.1, 1), nsim = 30)\n\ng.sim = c(g.sim.incontrol, g.sim.outcontrol)\n\n\n# write the sequence into .mat file\nadjR = lapply(g.sim, as.matrix.network.adjacency)\nnetworkSize = length(adjR)\nnames(adjR) = paste(\"mat\", 1:networkSize, sep = \"\")\n\nwriteMat(\"ergm_sim.mat\", adjSeq = adjR)\n",
+    "created" : 1426042235059.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1825646509",
+    "id" : "2AFECBE5",
+    "lastKnownWriteTime" : 1426042275,
+    "path" : "~/ST 697 R and Matlab Interface/simulation_R.R",
+    "project_path" : "simulation_R.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

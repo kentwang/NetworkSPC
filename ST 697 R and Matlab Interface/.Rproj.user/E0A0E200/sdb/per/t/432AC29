@@ -1,0 +1,16 @@
+{
+    "contents" : "### This program is an interface calling between R and Matlab for \n### change detection in social network. The interface used is R.matlab in R\n### Todo: \n###   - social network simulation using ergm\n###      - change the number of vertices as random\n###   - unknown reasons for haning on the Matlab server. Code can not run since then.\n\nrm(list = ls())\n\n# install the interface package and ergm\n# install.packages(\"R.matlab\")\n# install.packages(\"ergm\")\nlibrary(R.matlab)\nlibrary(ergm)\n\n\n# start the Matlab server. Needs to pause to get fully booted\nMatlab$startServer()\nSys.sleep(5)\n\n\n# create a Matlab client\nmatlab = Matlab()\n\n# opent the Matlab client\nisOpen = open(matlab)\n\n## The adj matrices should be generated through simulation and passed\n# through the interface.\n# In the trial, load the adj sequence\n# evaluate(matlab, \"load('enron_email_networks_directed.mat', 'adj');\")\n\n# define the type I error\nsetVariable(matlab, alpha = 0.05)\n\n# call the existing Matlab functions in the current path. No need to redefine!\n# evaluate(matlab, \"adj_test = adj(1:10);\")\n# evaluate(matlab, \"[mu, Sigma, loadings, theta, uclT2, uclSPE]=phaseIanalysis(adj_test,alpha);\")\n\n\n## Start the simulation using ergm. 30 in control and 20 out of control\n# n.sim = 60\n# n.inControl = 40\n# n.iter = 0\n# for(i in 1:n.sim) {\n#   n.iter = n.iter + 1\n#   cat(n.iter, \"/\", n.sim, \" iteration\\n\")\n#   \n#   # simulate the network in-control or out-of-control\n#   if(n.iter <= n.inControl)\n#     g.sim = simulate(network(50) ~ edges + mutual, coef=c(0, 0))\n#   else\n#     g.sim = simulate(network(50) ~ edges + mutual, coef=c(1, 0))\n#   \n#   # create adjencency matrices sequence in Matlab\n#   \n# }\n\n# generate network and write into .mat file\n#    - looks like we need to save the matrices and combine them in Matlab one by one\n# A <- matrix(1:27, ncol=3)\n# B <- as.matrix(1:10)\n# C <- array(1:18, dim=c(2,3,3))\n# D <- list(A, B, A)\n# \n# filename=\"adj_r.mat\"\n# writeMat(filename, A=A, B=B, C=C, D=D)\n\n\n########### start the simulation for 100 times #############\nn.mc = 100\nfor(k in 1:n.mc) {\n  cat(\"Monte Carlo iteration\", k, \"\\n\")\n  \n  g.sim = simulate(network(100) ~ edges + mutual, coef=c(0, 0), nsim = 50)\n  adjR = lapply(g.sim, as.matrix.network.adjacency)\n  networkSize = length(adjR)\n  names(adjR) = paste(\"mat\", 1:networkSize, sep = \"\")\n  \n  # write the network to .mat file, read in and reformat into cel array\n  writeMat(\"adjM.mat\", adjM = adjR)\n  evaluate(matlab, \"load('adjM.mat', 'adjM');\")\n  evaluate(matlab, \"adjMSeq = struct2cell(adjM);\")\n  \n  # temp = getVariable(matlab, \"adjM\")\n  evaluate(matlab, \"[mu, Sigma, loadings, theta, uclT2, uclSPE]=phaseIanalysis(adjMSeq, alpha);\")\n}\n\n\n\n",
+    "created" : 1424801554904.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "242460273",
+    "id" : "432AC29",
+    "lastKnownWriteTime" : 1424807847,
+    "path" : "~/ST 697 R and Matlab Interface/interface_call.R",
+    "project_path" : "interface_call.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
